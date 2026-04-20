@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { createBrowserClient } from "@supabase/ssr";
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+);
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -30,7 +35,6 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // ✅ check admin role
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
@@ -43,7 +47,6 @@ export default function AdminLoginPage() {
         return;
       }
 
-      // ✅ redirect
       router.push("/dashboard");
       router.refresh();
 
@@ -56,7 +59,10 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black">
-      <form onSubmit={handleLogin} className="bg-gray-900 p-6 rounded w-80 space-y-4">
+      <form
+        onSubmit={handleLogin}
+        className="bg-gray-900 p-6 rounded w-80 space-y-4"
+      >
         <h1 className="text-white text-xl text-center">Admin Login</h1>
 
         <input
@@ -77,7 +83,10 @@ export default function AdminLoginPage() {
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
 
-        <button className="w-full bg-orange-500 p-2 rounded text-white">
+        <button
+          className="w-full bg-orange-500 p-2 rounded text-white"
+          disabled={loading}
+        >
           {loading ? "Loading..." : "Login"}
         </button>
       </form>
