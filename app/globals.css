@@ -1,26 +1,255 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Global */
+
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg,#f9fafb,#eef2ff);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+/* Container */
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
 }
 
+
+/* Gradient Hero Background */
+
+.hero-bg{
+  background: linear-gradient(135deg,#6366f1,#3b82f6,#06b6d4);
+  color:white;
+}
+
+
+/* Navbar */
+
+.navbar{
+background:white;
+box-shadow:0 5px 20px rgba(0,0,0,0.05);
+backdrop-filter: blur(10px);
+}
+
+
+/* Buttons */
+
+.btn{
+  background: linear-gradient(135deg,#6366f1,#3b82f6);
+  color:white;
+  padding:12px 22px;
+  border-radius:10px;
+  font-weight:600;
+  transition:0.3s;
+  box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+
+/* Cards */
+
+.card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.card:hover {
+  transform: translateY(-7px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(59, 130, 246, 0.18);
+  border-color: #3b82f6;          /* blue */
+}
+
+/* Dark mode support (optional) */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  .card {
+    background: #1f2937;
+    border-color: #374151;
+    color: #f3f4f6;
+  }
+  
+  .card:hover {
+    box-shadow: 0 20px 48px rgba(59, 130, 246, 0.35);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+/* Pricing Card */
+
+.pricing-card{
+  background: linear-gradient(135deg,#ffffff,#f1f5f9);
+  border:1px solid #e5e7eb;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+
+/* Dashboard */
+
+.dashboard{
+  max-width:1200px;
+  margin:auto;
+  padding:40px;
+}
+
+
+/* Table */
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  background:white;
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+.table th{
+  background:linear-gradient(135deg,#111,#333);
+  color:white;
+  padding:12px;
+}
+
+.table td{
+  padding:12px;
+  border-bottom:1px solid #eee;
+}
+
+
+/* QR Sticker */
+
+.sticker{
+  width:300px;
+  background:white;
+  border-radius:14px;
+  padding:20px;
+  text-align:center;
+  border:2px solid #111;
+}
+
+.sticker h3{
+  font-size:20px;
+}
+
+.sticker p{
+  font-size:12px;
+  color:#666;
+}
+
+
+/* Print Button */
+
+.print-btn{
+  background:#22c55e;
+  color:white;
+  padding:10px 20px;
+  border-radius:8px;
+  margin-top:20px;
+  cursor:pointer;
+}
+
+
+/* Sticky Order Button */
+
+.sticky-order{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:linear-gradient(135deg,#6366f1,#3b82f6);
+  color:white;
+  padding:14px 24px;
+  border-radius:50px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+  font-weight:600;
+}
+
+
+/* Footer */
+
+.footer {
+  background: #000;
+  color: #aaa;
+  padding: 50px 20px;
+  text-align: center;
+  border-top: 1px solid #111;
+}
+
+.footer__text {
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.footer a {
+  color: #00d4ff;
+  font-weight: 500;
+  transition: all 0.28s ease;
+}
+
+.footer a:hover {
+  color: #00ffff;
+  text-shadow: 0 0 12px rgba(0, 212, 255, 0.7);
+}
+
+.footer .legal {
+  margin-top: 35px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Print Mode */
+
+@media print{
+
+body *{
+visibility:hidden;
+}
+
+#print-area, #print-area *{
+visibility:visible;
+}
+
+#print-area{
+position:absolute;
+top:40%;
+left:50%;
+transform:translate(-50%,-50%);
+}
+
+}
+
+
+/* Animation */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.animate-fadeIn{
+animation:fadeIn 0.8s ease forwards;
+}
+
+.delay-200{
+animation-delay:0.2s;
+}
+
+.delay-300{
+animation-delay:0.3s;
 }
