@@ -1,11 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { Loader2, ShieldCheck, ArrowRight } from "lucide-react";
 
 export default function OrderPage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,17 +20,21 @@ export default function OrderPage() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
       if (!user) {
         router.replace("/login?redirect=/order");
       }
     };
+
     checkUser();
   }, [router]);
 
-  const isFormValid = 
+  const isFormValid =
     (name ?? "").trim().length >= 2 &&
-    /^\d{10}$/.test((phone ?? "").trim()); // Indian 10-digit phone
+    /^\d{10}$/.test((phone ?? "").trim());
 
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,11 +57,7 @@ export default function OrderPage() {
 
       if (insertError) throw insertError;
 
-      // Success → redirect to registration with tag
       window.location.href = `/register?tag=${tagId}`;
-      // or use router.push if you want client-side navigation
-      // router.push(`/register?tag=${tagId}`);
-
     } catch (err: any) {
       setError(err.message || "Failed to place order. Please try again.");
     } finally {
@@ -63,7 +68,6 @@ export default function OrderPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        {/* Trust badge / mini header */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-indigo-100 text-indigo-700 text-sm font-medium">
             <ShieldCheck size={18} /> Secure & Instant Order
@@ -71,7 +75,6 @@ export default function OrderPage() {
         </div>
 
         <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100/80 overflow-hidden">
-          {/* Header */}
           <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-7 text-white">
             <h1 className="text-2xl font-bold tracking-tight">Order Your Tag</h1>
             <p className="mt-2 text-indigo-100/90 text-sm">
@@ -99,7 +102,7 @@ export default function OrderPage() {
                 label="Phone Number"
                 value={phone}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, ""); // only digits
+                  const val = e.target.value.replace(/\D/g, "");
                   setPhone(val.slice(0, 10));
                 }}
                 placeholder="9876543210"
@@ -128,7 +131,7 @@ export default function OrderPage() {
             </button>
 
             <p className="text-center text-sm text-gray-500">
-               • Instant tag generation • Secure Online Payments Only
+              • Instant tag generation • Secure Online Payments Only
             </p>
           </form>
         </div>
@@ -169,13 +172,12 @@ function InputField({
         required={required}
         className="peer w-full px-4 pt-7 pb-2.5 border border-slate-300 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-400/30 transition-all bg-white/70 hover:bg-white shadow-sm hover:shadow"
       />
+
       <label className="absolute left-4 top-2.5 text-xs text-slate-500 font-medium transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-400 peer-focus:top-2.5 peer-focus:text-xs peer-focus:text-indigo-600 pointer-events-none">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
 
-      {hint && (
-        <p className="mt-1.5 text-xs text-slate-500">{hint}</p>
-      )}
+      {hint && <p className="mt-1.5 text-xs text-slate-500">{hint}</p>}
     </div>
   );
 }

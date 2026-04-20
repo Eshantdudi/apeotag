@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import LocationButton from "./LocationButton";
 
@@ -7,7 +7,13 @@ export default async function TagPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params; // ✅ MOST IMPORTANT FIX
+  const { id } = await params;
+
+  // ✅ runtime pe client create hoga
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   console.log("SERVER TAG 👉", id);
 
