@@ -3,11 +3,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+  const { pathname } = request.nextUrl;
+
+  let response = NextResponse.next();
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,9 +19,11 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
+
           response = NextResponse.next({
             request,
           });
+
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -36,13 +36,17 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
+  // 🔥 SAFE ROUTE PROTECTION
+  const isAdminLogin = pathname.startsWith("/admin/login");
+  const isDashboard = pathname.startsWith("/dashboard");
 
-  if (pathname.startsWith("/dashboard") && !user) {
+  // ❌ block dashboard if not logged in
+  if (isDashboard && !user) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
-  if (pathname.startsWith("/admin/login") && user) {
+  // ❌ block login if already logged in
+  if (isAdminLogin && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
