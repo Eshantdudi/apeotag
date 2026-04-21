@@ -2,17 +2,48 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { name, phone, email, amount, purpose, tag_id } = await req.json();
+    const { name, phone, email, amount, purpose, tag_id } =
+      await req.json();
+
+    // 🔥 VALIDATION (IMPORTANT)
+    if (!name || !phone || !email || !amount || !tag_id) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
 
     const appId = process.env.CASHFREE_APP_ID;
     const secretKey = process.env.CASHFREE_SECRET_KEY;
 
     if (!appId || !secretKey) {
-      console.error("❌ Keys missing!");
-      return NextResponse.json({ error: "Keys missing" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Cashfree keys missing" },
+        { status: 500 }
+      );
     }
 
-    const orderId = "order_" + tag_id + "_" + Date.now();
+    // 🔥 SAFE ORDER ID
+    const orderId = `order_${tag_id}_${Date.now()}`;
+
+    const payload = {
+      order_id: orderId,
+      order_amount: Number(amount), // 🔥 FIXED
+      order_currency: "INR",
+      customer_details: {
+        customer_id: phone,
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+      },
+      order_meta: {
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?tag_id=${tag_id}&order_id=${orderId}`,
+        notify_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment-webhook`,
+      },
+      order_note: purpose || "Payment",
+    };
+
+    console.log("🚀 Cashfree Payload:", payload);
 
     const res = await fetch("https://sandbox.cashfree.com/pg/orders", {
       method: "POST",
@@ -22,41 +53,30 @@ export async function POST(req: Request) {
         "x-client-id": appId,
         "x-client-secret": secretKey,
       },
-      body: JSON.stringify({
-        order_id: orderId,
-        order_amount: amount,
-        order_currency: "INR",
-        customer_details: {
-          customer_id: phone,
-          customer_name: name,
-          customer_email: email,
-          customer_phone: phone,
-        },
-        order_meta: {
-          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?tag_id=${tag_id}`,
-          notify_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payment-webhook`,
-        },
-        order_note: purpose,
-      }),
+      body: JSON.stringify(payload),
     });
 
-    const raw = await res.text();
-    console.log("✅ Cashfree status:", res.status);
-    console.log("✅ Cashfree response:", raw);
+    const data = await res.json();
 
-    const data = JSON.parse(raw);
+    console.log("📦 Cashfree Response:", data);
 
-    if (data.payment_session_id) {
-      return NextResponse.json({
-        payment_session_id: data.payment_session_id,
-        order_id: orderId,
-      });
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: data },
+        { status: 400 }
+      );
     }
 
-    return NextResponse.json({ error: data }, { status: 400 });
+    return NextResponse.json({
+      payment_session_id: data.payment_session_id,
+      order_id: orderId,
+    });
 
   } catch (err: any) {
-    console.error("💥 Route crash:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("💥 Crash:", err);
+    return NextResponse.json(
+      { error: err.message },
+      { status: 500 }
+    );
   }
 }
