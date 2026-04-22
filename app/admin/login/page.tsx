@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
-
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
+import { supabase } from "@/lib/supabase";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -19,42 +14,21 @@ export default function AdminLoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return;
-
     setLoading(true);
     setError("");
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (error || !data?.user) {
-        setError("Invalid email or password ❌");
-        return;
-      }
-
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", data.user.id)
-        .single();
-
-      if (!profile || profile.role !== "admin") {
-        await supabase.auth.signOut();
-        setError("Access denied 🚫");
-        return;
-      }
-
-      router.push("/dashboard");
-      router.refresh();
-
-    } catch (err) {
-      setError("Something went wrong ❌");
-    } finally {
+    if (error) {
+      setError(error.message);
       setLoading(false);
+      return;
     }
+
+    window.location.href = "/dashboard";
   };
 
   return (
