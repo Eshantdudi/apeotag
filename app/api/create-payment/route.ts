@@ -57,6 +57,8 @@ export async function POST(req: Request) {
     });
 
     const data = await res.json();
+    console.log("Cashfree Status:", res.status);
+console.log("Cashfree Response:", data);
 
     console.log("📦 Cashfree Response:", data);
 
