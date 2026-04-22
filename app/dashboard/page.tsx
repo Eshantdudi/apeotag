@@ -50,7 +50,7 @@ export default function Dashboard() {
     ]);
 
     const vehicles: Entry[] =
-      vehiclesRes.data?.map((v) => ({
+      vehiclesRes.data?.map((v:any) => ({
         id: v.id,
         type: "vehicle",
         name: v.vehicle_number,
@@ -63,7 +63,7 @@ export default function Dashboard() {
       })) || [];
 
     const pets: Entry[] =
-      petsRes.data?.map((p) => ({
+      petsRes.data?.map((p:any) => ({
         id: p.id,
         type: "pet",
         name: p.pet_name,
