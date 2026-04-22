@@ -69,7 +69,7 @@ export default function HowItWorks() {
 
       {/* Heading */}
       <h2 className="text-4xl font-extrabold text-gray-900 mb-2">
-        How PinakaTag Works
+        How Apeo Tag Works
       </h2>
       <p className="text-gray-500 text-base mb-10">
         Get connected in minutes — no app needed
