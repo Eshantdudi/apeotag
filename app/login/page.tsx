@@ -29,7 +29,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
-          emailRedirectTo: `https://apeo.in/order`,
+          emailRedirectTo: `${window.location.origin}/order`,
         },
       });
 
