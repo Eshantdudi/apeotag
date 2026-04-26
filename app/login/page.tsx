@@ -29,7 +29,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim(),
         options: {
-          emailRedirectTo: `${window.location.origin}/order`,
+          emailRedirectTo: `${window.location.origin}/account`,
         },
       });
 
@@ -49,7 +49,7 @@ export default function LoginPage() {
         {/* Trust badge */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm border border-indigo-100 text-indigo-700 text-sm font-medium">
-            <ShieldCheck size={18} /> Secure Magic Link Login
+            <ShieldCheck size={18} /> Secure Login Link
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
                 <p className="mt-2 text-indigo-100/90 text-sm">
-                  Login with magic link — no password needed
+                  Login with link — no password needed
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold text-slate-800">
-                    Magic Link Sent!
+                    Login Link Sent!
                   </h3>
                   <p className="text-slate-600 mt-3">
                     Check your inbox ({email.trim()})<br />
@@ -122,19 +122,14 @@ export default function LoginPage() {
                     </>
                   ) : (
                     <>
-                      Send Magic Link <ArrowRight size={18} />
+                      Send Login Link <ArrowRight size={18} />
                     </>
                   )}
                 </button>
 
                 <p className="text-center text-sm text-slate-500">
                   No account yet?{" "}
-                  <a
-                    href="/signup"
-                    className="text-indigo-600 hover:text-indigo-800 font-medium underline"
-                  >
-                    Sign up here
-                  </a>
+                
                 </p>
               </div>
             )}

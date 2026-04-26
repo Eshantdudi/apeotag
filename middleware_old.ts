@@ -37,6 +37,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // 🔥 SAFE ROUTE PROTECTION
+  const isAccount = pathname.startsWith("/account");
   const isAdminLogin = pathname.startsWith("/admin/login");
   const isDashboard = pathname.startsWith("/dashboard");
 
@@ -49,10 +50,14 @@ export async function middleware(request: NextRequest) {
   if (isAdminLogin && user) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+// ❌ block user login if already logged in
+  if (isAccount && !user) {
+  return NextResponse.redirect(new URL("/login", request.url));
+}
 
   return response;
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/login"],
+  matcher: ["/dashboard/:path*", "/admin/login",  "/account/:path*"],
 };

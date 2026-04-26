@@ -17,7 +17,7 @@ export default function OrderPage() {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
-
+  const [user, setUser] = useState<any>(null);
   useEffect(() => {
     const checkUser = async () => {
       const {
@@ -27,6 +27,8 @@ export default function OrderPage() {
       if (!user) {
         router.replace("/login?redirect=/order");
       }
+      setUser(user);
+
     };
 
     checkUser();
@@ -51,6 +53,7 @@ export default function OrderPage() {
             name: (name ?? "").trim(),
             phone: (phone ?? "").trim(),
             tag_id: tagId,
+             user_id: user?.id,
             created_at: new Date().toISOString(),
           },
         ]);

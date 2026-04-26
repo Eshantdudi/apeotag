@@ -95,7 +95,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-5 py-3 rounded-xl transition mt-1"
           >
-            Order Tag — ₹199
+            Order Tag 
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M3 7h8M8 4l3 3-3 3" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
