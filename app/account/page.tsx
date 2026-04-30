@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import {
-  User, Package, LogOut, Clock,
+  Package, LogOut, Clock,
   IndianRupee, Home, ChevronRight,
   MapPin, CheckCircle2, Circle
 } from "lucide-react";
@@ -20,6 +20,9 @@ export default function AccountPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Ref mein channel rakho — React Strict Mode double-call safe
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
   useEffect(() => {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -28,44 +31,53 @@ export default function AccountPage() {
         return;
       }
       setUser(user);
-     // Pehle orders fetch karo
-const { data: ordersData } = await supabase
-  .from("orders")
-  .select("*")
-  .eq("user_id", user.id)
-  .order("created_at", { ascending: false });
 
-setOrders(ordersData || []);
-setLoading(false);
+      const { data: ordersData } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
-// ✅ Real-time — admin status change kare toh user ko turant dikhe
-const channel = supabase
-  .channel("orders-realtime")
-  .on(
-    "postgres_changes",
-    {
-      event: "UPDATE",
-      schema: "public",
-      table: "orders",
-      filter: `user_id=eq.${user.id}`, // sirf is user ke orders
-    },
-    (payload) => {
-      // Sirf woh order update karo jo change hua
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.id === payload.new.id ? { ...o, ...payload.new } : o
+      setOrders(ordersData || []);
+      setLoading(false);
+
+      // ✅ Pehle purana channel remove karo (Strict Mode double-call fix)
+      if (channelRef.current) {
+        await supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+
+      // ✅ Har baar naya unique name — conflict impossible
+      channelRef.current = supabase
+        .channel(`orders-${user.id}-${Date.now()}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "orders",
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            setOrders((prev) =>
+              prev.map((o) =>
+                o.id === payload.new.id ? { ...o, ...payload.new } : o
+              )
+            );
+          }
         )
-      );
-    }
-  )
-  .subscribe();
-
-// Cleanup — jab user page se chala jaye
-return () => {
-  supabase.removeChannel(channel);
-};
+        .subscribe();
     };
+
     init();
+
+    // ✅ Cleanup — page chhodne pe channel band karo
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+    };
   }, [router]);
 
   const handleLogout = async () => {
@@ -90,7 +102,6 @@ return () => {
       {/* Top Header */}
       <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3.5 flex items-center justify-between">
-          {/* Back to Home Button */}
           <button
             onClick={() => router.push("/")}
             className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-indigo-600 transition-colors bg-gray-100 hover:bg-indigo-50 px-3 py-1.5 rounded-full"
@@ -132,7 +143,6 @@ return () => {
             </div>
           </div>
 
-          {/* Stats Row */}
           <div className="mt-4 pt-4 border-t border-white/20 grid grid-cols-2 gap-3">
             <div className="bg-white/15 rounded-xl p-3 text-center">
               <p className="text-2xl font-bold">{orders.length}</p>
@@ -184,7 +194,6 @@ return () => {
           )}
         </div>
 
-        {/* Place New Order Button */}
         {orders.length > 0 && (
           <button
             onClick={() => router.push("/order")}
@@ -222,7 +231,6 @@ function OrderCard({ order }: { order: any }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
 
-      {/* Card Top Color Strip */}
       <div className={`h-1 w-full ${
         order.status === "delivered" ? "bg-green-400" :
         order.status === "shipped"   ? "bg-purple-400" :
@@ -231,7 +239,6 @@ function OrderCard({ order }: { order: any }) {
       }`} />
 
       <div className="p-5 space-y-4">
-        {/* Header */}
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="font-bold text-gray-900 text-sm tracking-wide">
@@ -249,7 +256,6 @@ function OrderCard({ order }: { order: any }) {
           </span>
         </div>
 
-        {/* Details */}
         <div className="grid grid-cols-2 gap-2.5">
           <div className="bg-slate-50 rounded-xl p-3">
             <p className="text-[10px] text-gray-400 uppercase tracking-wide">Name</p>
@@ -269,30 +275,24 @@ function OrderCard({ order }: { order: any }) {
           )}
         </div>
 
-        {/* Tracking Steps */}
         {order.status !== "cancelled" && (
           <div className="pt-1">
             <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-3 flex items-center gap-1">
               <MapPin size={11} /> Order Tracking
             </p>
             <div className="relative">
-              {/* Progress Line */}
               <div className="absolute top-3.5 left-3.5 right-3.5 h-0.5 bg-gray-200 -z-0" />
               <div
                 className="absolute top-3.5 left-3.5 h-0.5 bg-indigo-500 transition-all duration-500 -z-0"
                 style={{ width: currentStep <= 0 ? "0%" : `${(currentStep / (steps.length - 1)) * 100}%` }}
               />
-
-              {/* Steps */}
               <div className="flex justify-between relative z-10">
                 {steps.map((step, i) => {
                   const isDone = i <= currentStep;
                   return (
                     <div key={step.key} className="flex flex-col items-center gap-1.5">
                       <div className={`w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all ${
-                        isDone
-                          ? "bg-indigo-500 border-indigo-500"
-                          : "bg-white border-gray-200"
+                        isDone ? "bg-indigo-500 border-indigo-500" : "bg-white border-gray-200"
                       }`}>
                         {isDone
                           ? <CheckCircle2 size={14} className="text-white" />

@@ -253,3 +253,18 @@ animation-delay:0.2s;
 .delay-300{
 animation-delay:0.3s;
 }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes glowBlue {
+  0%, 100% { box-shadow: 0 8px 32px rgba(60,52,137,0.13); border-color: transparent; }
+  50%       { box-shadow: 0 8px 40px rgba(60,52,137,0.35), 0 0 0 3px #7F77DD44; border-color: #7F77DD; }
+}
+
+@keyframes glowGreen {
+  0%, 100% { box-shadow: 0 8px 32px rgba(15,110,86,0.12); border-color: transparent; }
+  50%       { box-shadow: 0 8px 40px rgba(15,110,86,0.3), 0 0 0 3px #1D9E7544; border-color: #1D9E75; }
+}

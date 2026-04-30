@@ -60,62 +60,49 @@ export default function Hero() {
 
         </div>
 
-        {/* RIGHT */}
-        <div className="flex justify-center md:justify-end gap-4">
+        {/* RIGHT - Animated Tag Images */}
+<div className="flex justify-center md:justify-end items-start gap-5 pt-5">
 
-          {/* VEHICLE CARD */}
-          <div className="w-[160px] bg-white rounded-2xl shadow-xl border p-4 text-center relative">
+  {/* VEHICLE TAG */}
+  <div
+    className="w-60 rounded-2xl overflow-hidden cursor-pointer"
+    style={{
+      boxShadow: '0 8px 32px rgba(60,52,137,0.13)',
+      border: '2px solid transparent',
+      animation: 'slideIn 0.6s cubic-bezier(.34,1.56,.64,1) forwards, glowBlue 3s 0.8s infinite',
+      opacity: 0,
+      transition: 'transform 0.35s cubic-bezier(.34,1.56,.64,1)',
+    }}
+    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px) scale(1.04) rotate(-1.5deg)'}
+    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
+  >
+    <div className="text-center text-xs font-bold py-1.5 tracking-wide text-white" style={{ background: '#3C3489' }}>
+      VEHICLE TAG
+    </div>
+    <img src="/products/tag3.png" alt="Vehicle QR Tag" className="w-full block" />
+  </div>
 
-            <div className="text-white text-sm font-bold py-2 rounded-lg mb-3" style={{ background: '#3C3489' }}>
-              VEHICLE TAG
-            </div>
+  {/* PET TAG */}
+  <div
+    className="w-60 rounded-2xl overflow-hidden cursor-pointer mt-8"
+    style={{
+      boxShadow: '0 8px 32px rgba(15,110,86,0.12)',
+      border: '2px solid transparent',
+      animation: 'slideIn 0.6s cubic-bezier(.34,1.56,.64,1) 0.18s forwards, glowGreen 3s 1s infinite',
+      opacity: 0,
+      transition: 'transform 0.35s cubic-bezier(.34,1.56,.64,1)',
+    }}
+    onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-10px) scale(1.04) rotate(1.5deg)'}
+    onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0) scale(1)'}
+  >
+    <div className="text-center text-xs font-bold py-1.5 tracking-wide text-white" style={{ background: '#0F6E56' }}>
+      PET TAG
+    </div>
+    <img src="/products/tag2.png" alt="Pet QR Tag" className="w-full block" />
+  </div>
 
-            <div className="w-24 h-24 mx-auto mb-3 rounded-lg flex items-center justify-center" style={{ background: '#EEEDFE' }}>
-              QR
-            </div>
-
-            <p className="text-xs mb-2">Scan to Contact</p>
-
-            <div className="space-y-1 text-[10px]">
-              <div className="bg-green-500 text-white py-1 rounded">Call</div>
-              <div className="bg-green-400 text-white py-1 rounded">Message</div>
-              <div className="bg-red-500 text-white py-1 rounded">Emergency</div>
-            </div>
-
-            <div className="absolute -top-3 -right-3 text-white text-xs px-2 py-1 rounded-full" style={{ background: '#3C3489' }}>
-              ₹295
-            </div>
-
-          </div>
-
-          {/* PET CARD */}
-          <div className="w-[160px] bg-white rounded-2xl shadow-xl border p-4 text-center relative mt-8">
-
-            <div className="bg-amber-500 text-white text-sm font-bold py-2 rounded-lg mb-3">
-              PET TAG
-            </div>
-
-            <div className="w-24 h-24 bg-amber-100 mx-auto mb-3 rounded-lg flex items-center justify-center">
-              🐶
-            </div>
-
-            <p className="text-xs mb-2">Find Owner</p>
-
-            <div className="space-y-1 text-[10px]">
-              <div className="bg-green-500 text-white py-1 rounded">Call</div>
-              <div className="bg-green-400 text-white py-1 rounded">Message</div>
-              <div className="bg-amber-500 text-white py-1 rounded">Profile</div>
-            </div>
-
-            <div className="absolute -top-3 -right-3 bg-amber-500 text-white text-xs px-2 py-1 rounded-full">
-              ₹495
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
+</div>
+</div>
     </section>
   );
 }

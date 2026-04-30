@@ -81,7 +81,7 @@ export default function Pricing() {
             <ul className="text-left space-y-3 mb-8 text-sm text-gray-600">
               <li>✔ Find lost pet instantly</li>
               <li>✔ No app needed</li>
-              <li>✔ Lightweight</li>
+              <li>✔ Lightweight, Acrelic Tag</li>
               <li>✔ Lifetime validity</li>
                <li>✔ Tax-Inclusive Pricing</li>
             </ul>
