@@ -18,7 +18,7 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen bg-[#f8f8f6] flex flex-col items-center justify-center p-6">
         <div className="mb-10 text-center">
-          <p className="text-xs text-gray-400 tracking-[0.3em] uppercase mb-2">Pinaka Infra</p>
+          <p className="text-xs text-gray-400 tracking-[0.3em] uppercase mb-2">APEO</p>
           <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">What are you registering?</h1>
           <p className="text-sm text-gray-400 mt-2">Tap one to get started</p>
           {tagId && (
@@ -128,7 +128,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f6] flex flex-col items-center justify-center p-6">
       <div className="mb-8 text-center">
-        <p className="text-xs text-gray-400 tracking-[0.3em] uppercase mb-2">Pinaka Infra</p>
+        <p className="text-xs text-gray-400 tracking-[0.3em] uppercase mb-2">APEO</p>
         <h1 className="text-2xl font-semibold text-gray-900 tracking-tight">Register your tag</h1>
         {tagId && (
           <span className="inline-block mt-2 text-xs font-mono bg-gray-100 text-gray-500 px-3 py-1 rounded-full">
@@ -204,7 +204,7 @@ function VehicleForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "customer@pinakainfra.com", amount: 295, purpose: "Vehicle QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 295, purpose: "Vehicle QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }
@@ -214,7 +214,7 @@ function VehicleForm({ tagId }: { tagId: string }) {
 
   const generateInvoice = () => {
     const doc = new jsPDF();
-    doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.text("Pinaka Infra", 20, 25);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.text("APEO", 20, 25);
     doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.text("Vehicle QR Tag Invoice", 20, 35);
     doc.line(20, 40, 190, 40);
     doc.text(`Owner: ${ownerName}`, 20, 55); doc.text(`Phone: ${phone}`, 20, 65);
@@ -309,7 +309,7 @@ function PrimeForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "customer@pinakainfra.com", amount: 799, purpose: "Prime QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 799, purpose: "Prime QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }
@@ -451,7 +451,7 @@ function PetForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "customer@pinakainfra.com", amount: 495, purpose: "Pet QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 495, purpose: "Pet QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }
