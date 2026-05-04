@@ -172,7 +172,7 @@ export default function RegisterPage() {
 /* ================= CASHFREE HELPER ================= */
 const openCashfree = (paymentSessionId: string) => {
   const cashfree = (window as any).Cashfree({
-    mode: process.env.NEXT_PUBLIC_CASHFREE_MODE || "production",
+    mode: "production",
   });
   cashfree.checkout({ paymentSessionId, redirectTarget: "_self" });
 };
