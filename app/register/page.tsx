@@ -204,7 +204,7 @@ function VehicleForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 295, purpose: "Vehicle QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 5, purpose: "Vehicle QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }
@@ -309,7 +309,7 @@ function PrimeForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 799, purpose: "Prime QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 5, purpose: "Prime QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }
@@ -451,7 +451,7 @@ function PetForm({ tagId }: { tagId: string }) {
       const res = await fetch("/api/create-payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 495, purpose: "Pet QR Tag - " + tagId, tag_id: tagId }),
+        body: JSON.stringify({ name: ownerName, phone, email: "info@pinakainfra.com", amount: 5, purpose: "Pet QR Tag - " + tagId, tag_id: tagId }),
       });
       const data = await res.json();
       if (data.payment_session_id) { openCashfree(data.payment_session_id); }

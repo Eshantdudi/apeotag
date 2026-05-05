@@ -48,8 +48,9 @@ function SuccessContent() {
             </h1>
 
             <p className="text-green-100 text-sm mt-1">
-              Your tag is now active
-            </p>
+             Your tag is now active.To track your order, please check your login account.
+            
+              </p>
           </div>
 
           {/* DETAILS */}

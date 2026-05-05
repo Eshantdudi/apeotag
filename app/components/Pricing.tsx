@@ -76,7 +76,6 @@ export default function Pricing() {
 
             <ul className="text-left space-y-3 mb-8 text-sm" style={{ color: '#D4A82A' }}>
               <li>✦ Hexagonal premium design</li>
-              <li>✦ Gold foil print quality</li>
               <li>✦ Instant owner contact</li>
               <li>✦ No app needed</li>
               <li>✦ Lifetime validity</li>
