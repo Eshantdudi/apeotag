@@ -63,6 +63,7 @@ export default function Navbar() {
             { label: "Home",         href: "/" },
             { label: "How It Works", href: "#HowItWorks" },
             { label: "Pricing",      href: "#pricing" },
+            
             { label: "Contact Us",   href: "#Footer" },
           ].map((l) => (
             <Link
@@ -121,7 +122,7 @@ export default function Navbar() {
           {[
             { label: "Home",         href: "/"           },
             { label: "How It Works", href: "#HowItWorks" },
-            { label: "Products",     href: "/products"   },
+           
             { label: "Pricing",      href: "#pricing"    },
             { label: "Contact Us",   href: "#Footer"     },
           ].map((l) => (
