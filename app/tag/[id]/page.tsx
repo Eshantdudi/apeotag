@@ -17,22 +17,21 @@ export default async function TagPage({
 
   const { data: vehicle } = await supabase
     .from("vehicles")
-    .select("*")
+    .select("vehicle_number, owner_name, city, state, pincode")
     .eq("tag_id", id)
     .maybeSingle();
 
   const { data: pet } = await supabase
     .from("pets")
-    .select("*")
+    .select("pet_name, pet_type, owner_name, city, state, pincode")
     .eq("tag_id", id)
     .maybeSingle();
 
   if (!vehicle && !pet) return notFound();
-  if (vehicle) return <VehicleCard data={vehicle} />;
-  return <PetCard data={pet} />;
+  if (vehicle) return <VehicleCard data={vehicle} tagId={id} />;
+  return <PetCard data={pet} tagId={id} />;
 }
 
-/* ── shared styles injected once ── */
 const globalStyles = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap');
 
@@ -216,10 +215,7 @@ const globalStyles = `
   }
 `;
 
-/* ════════════════════════════════
-   VEHICLE CARD — Purple
-════════════════════════════════ */
-function VehicleCard({ data }: { data: any }) {
+function VehicleCard({ data, tagId }: { data: any; tagId: string }) {
   const rows = [
     { label: "Owner",   value: data.owner_name || "—" },
     { label: "City",    value: data.city        || "—" },
@@ -242,23 +238,19 @@ function VehicleCard({ data }: { data: any }) {
             boxShadow: "0 0 0 0.5px rgba(127,119,221,0.1), 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(83,74,183,0.12)",
           }}
         >
-          {/* Header */}
           <div
             className="pinaka-header"
             style={{ background: "linear-gradient(160deg, #211c60 0%, #1a1650 100%)" }}
           >
-            {/* Orbs */}
             <div className="pinaka-orb" style={{ top: -32, right: -32, width: 130, height: 130, background: "rgba(127,119,221,0.13)" }} />
             <div className="pinaka-orb" style={{ bottom: -40, right: 20, width: 80, height: 80, background: "rgba(83,74,183,0.09)", animationDelay: "2s" }} />
             <div className="pinaka-orb" style={{ top: 10, left: -20, width: 60, height: 60, background: "rgba(175,169,236,0.06)", animationDelay: "1s" }} />
 
-            {/* Top label */}
             <div className="pinaka-badge-label" style={{ color: "#534AB7" }}>
               <span className="pinaka-badge-dot" style={{ background: "#534AB7" }} />
               Pinaka Infra
             </div>
 
-            {/* Title row */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, position: "relative" }}>
               <div
                 className="pinaka-icon-wrap"
@@ -280,10 +272,8 @@ function VehicleCard({ data }: { data: any }) {
             </div>
           </div>
 
-          {/* Divider */}
           <div className="pinaka-divider" style={{ background: "rgba(127,119,221,0.15)" }} />
 
-          {/* Info rows */}
           <div className="pinaka-rows">
             {rows.map((r, i) => (
               <div
@@ -300,12 +290,9 @@ function VehicleCard({ data }: { data: any }) {
             ))}
           </div>
 
-          {/* Actions */}
           <div className="pinaka-actions">
-            {data.phone && <CallButton phone={data.phone} color="purple" />}
-
+            <CallButton tagId={tagId} color="purple" />
             <LocationButton color="purple" />
-
             <p className="pinaka-footer-note" style={{ color: "#3C3489" }}>
               Found this vehicle? Contact the owner.
             </p>
@@ -316,10 +303,7 @@ function VehicleCard({ data }: { data: any }) {
   );
 }
 
-/* ════════════════════════════════
-   PET CARD — Green
-════════════════════════════════ */
-function PetCard({ data }: { data: any }) {
+function PetCard({ data, tagId }: { data: any; tagId: string }) {
   const rows = [
     { label: "Pet type", value: data.pet_type   || "—" },
     { label: "Owner",    value: data.owner_name || "—" },
@@ -343,23 +327,19 @@ function PetCard({ data }: { data: any }) {
             boxShadow: "0 0 0 0.5px rgba(29,158,117,0.08), 0 40px 80px rgba(0,0,0,0.65), 0 0 60px rgba(15,110,86,0.1)",
           }}
         >
-          {/* Header */}
           <div
             className="pinaka-header"
             style={{ background: "linear-gradient(160deg, #0c4a3c 0%, #083829 100%)" }}
           >
-            {/* Orbs */}
             <div className="pinaka-orb" style={{ top: -32, right: -32, width: 130, height: 130, background: "rgba(29,158,117,0.12)" }} />
             <div className="pinaka-orb" style={{ bottom: -40, right: 20, width: 80, height: 80, background: "rgba(15,110,86,0.09)", animationDelay: "2s" }} />
             <div className="pinaka-orb" style={{ top: 10, left: -20, width: 60, height: 60, background: "rgba(93,202,165,0.06)", animationDelay: "1s" }} />
 
-            {/* Top label */}
             <div className="pinaka-badge-label" style={{ color: "#0F6E56" }}>
               <span className="pinaka-badge-dot" style={{ background: "#0F6E56" }} />
               Pinaka Infra
             </div>
 
-            {/* Title row */}
             <div style={{ display: "flex", alignItems: "center", gap: 14, position: "relative" }}>
               <div
                 className="pinaka-icon-wrap"
@@ -381,10 +361,8 @@ function PetCard({ data }: { data: any }) {
             </div>
           </div>
 
-          {/* Divider */}
           <div className="pinaka-divider" style={{ background: "rgba(29,158,117,0.12)" }} />
 
-          {/* Info rows */}
           <div className="pinaka-rows">
             {rows.map((r, i) => (
               <div
@@ -401,12 +379,9 @@ function PetCard({ data }: { data: any }) {
             ))}
           </div>
 
-          {/* Actions */}
           <div className="pinaka-actions">
-            {data.phone && <CallButton phone={data.phone} color="green" />}
-
+            <CallButton tagId={tagId} color="green" />
             <LocationButton color="green" />
-
             <p className="pinaka-footer-note" style={{ color: "#085041" }}>
               Found this pet? Contact the owner.
             </p>

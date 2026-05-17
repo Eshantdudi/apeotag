@@ -1,26 +1,26 @@
 "use client";
 
 type Props = {
-  phone: string;
+  tagId: string;
   color?: "purple" | "green";
 };
 
-export default function CallButton({ phone, color = "purple" }: Props) {
+export default function CallButton({ tagId, color = "purple" }: Props) {
   function handleCall() {
-    window.location.href = `tel:${phone}`;
+    window.location.href = `/api/call/${tagId}`;
   }
 
   const styles =
     color === "green"
       ? {
-          background: "linear-gradient(135deg, #534AB7 0%, #3C3489 100%)",
-          color: "#CECBF6",
-          border: "0.5px solid rgba(127,119,221,0.3)",
-        }
-      : {
           background: "linear-gradient(135deg, #1D9E75 0%, #0F6E56 100%)",
           color: "#9FE1CB",
           border: "0.5px solid rgba(93,202,165,0.3)",
+        }
+      : {
+          background: "linear-gradient(135deg, #534AB7 0%, #3C3489 100%)",
+          color: "#CECBF6",
+          border: "0.5px solid rgba(127,119,221,0.3)",
         };
 
   return (
